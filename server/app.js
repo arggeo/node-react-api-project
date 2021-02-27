@@ -55,5 +55,11 @@ app.use((error, req, res, next) => {
 });
 
 mongoose.connect('mongodb+srv://argy:myS3cuReP4ssW0rd@cluster0.elrli.mongodb.net/messages')
-   .then(result => app.listen(8080))
-   .catch(err => console.log(err))
+   .then(result => {
+      const server = app.listen(8080);
+      const io = require('./socket').init(server);
+      io.on('connection', socket => {
+         console.log('Client connected');
+      });
+   })
+   .catch(err => console.log(err));
